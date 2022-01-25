@@ -6,17 +6,17 @@ import java.util.List;
 
 public class Testes {
     public static void main(String[] args) {
-        Peca peca = new Rainha();
+        Peca peca = new Cavalo();
         peca.setCor(CorDaPeca.BRANCA);
-        peca.setPosicao(new Posicao(4, 4));
+        peca.setPosicao(new Posicao(0, 5));
 
-        Peca outraPeca = new Bispo();
-        outraPeca.setCor(CorDaPeca.PRETA);
-        outraPeca.setPosicao(new Posicao(3, 3));
+        Peca peca2 = new Peao();
+        peca2.setCor(CorDaPeca.PRETA);
+        peca2.setPosicao(new Posicao(0, 4));
 
         Tabuleiro tabuleiro = new Tabuleiro();
-        tabuleiro.getCampo()[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = peca;
-        tabuleiro.getCampo()[outraPeca.getPosicao().getLinha()][outraPeca.getPosicao().getColuna()] = outraPeca;
+        adicionarPeca(tabuleiro, peca);
+        adicionarPeca(tabuleiro, peca2);
 
         List<Posicao> possiveisJogadas = peca.informarPossiveisJogadas(tabuleiro);
 
@@ -26,8 +26,9 @@ public class Testes {
                 tabuleiroVisual[i][j] = "[ ]";
             }
         }
-        tabuleiroVisual[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = "[0]";
-        tabuleiroVisual[outraPeca.getPosicao().getLinha()][outraPeca.getPosicao().getColuna()] = "[1]";
+
+        adicionarPecaVisual(tabuleiroVisual, peca, "[0]");
+        adicionarPecaVisual(tabuleiroVisual, peca2, "[1]");
 
         for (Posicao posicao : possiveisJogadas) {
             tabuleiroVisual[posicao.getLinha()][posicao.getColuna()] = "[X]";
@@ -39,5 +40,13 @@ public class Testes {
             }
             System.out.println();
         }
+    }
+
+    private static void adicionarPecaVisual(String[][] tabuleiroVisual, Peca peca, String s) {
+        tabuleiroVisual[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = s;
+    }
+
+    private static void adicionarPeca(Tabuleiro tabuleiro, Peca peca) {
+        tabuleiro.getCampo()[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = peca;
     }
 }
