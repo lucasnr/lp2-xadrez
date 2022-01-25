@@ -8,158 +8,61 @@ public class Jogo {
 	private EstadoDeJogo estado;
 	
 	public Jogo() {
-		estado = EstadoDeJogo.START;
-		Tabuleiro tab = new Tabuleiro();
+		this.estado = EstadoDeJogo.START;
+		this.tabuleiro = new Tabuleiro();
+
 		Peca[][] lugares = new Peca[8][8];
-		
-		for(int a = 0; a < 8; a++) {
-			for(int b = 0; b < 8; b++) {
-				lugares[a][b] = null;
+
+		CorDaPeca cores[] = { CorDaPeca.BRANCA, CorDaPeca.PRETA };
+		for (CorDaPeca cor : cores) {
+			// Peões
+			for (int i = 0; i < 8; i++) {
+				Integer linha = cor == CorDaPeca.BRANCA ? 6 : 1;
+				Peca peao = new Peao();
+				peao.setCor(cor);
+				peao.setPosicao(new Posicao(linha, i));
+				lugares[linha][i] = peao;
 			}
+
+			Torre torreEsquerda = new Torre();
+			Cavalo cavaloEsquerda = new Cavalo();
+			Bispo bispoEsquerda = new Bispo();
+			Rainha rainha = new Rainha();
+			Rei rei = new Rei();
+			Bispo bispoDireita = new Bispo();
+			Cavalo cavaloDireita = new Cavalo();
+			Torre torreDireita = new Torre();
+
+			Integer linha = cor == CorDaPeca.BRANCA ? 7 : 0;
+
+			torreEsquerda.setCor(cor);
+			torreEsquerda.setPosicao(new Posicao(linha, 0));
+			cavaloEsquerda.setCor(cor);
+			cavaloEsquerda.setPosicao(new Posicao(linha, 1));
+			bispoEsquerda.setCor(cor);
+			bispoEsquerda.setPosicao(new Posicao(linha, 2));
+			rainha.setCor(cor);
+			rainha.setPosicao(new Posicao(linha, 3));
+			rei.setCor(cor);
+			rei.setPosicao(new Posicao(linha, 4));
+			bispoDireita.setCor(cor);
+			bispoDireita.setPosicao(new Posicao(linha, 5));
+			cavaloDireita.setCor(cor);
+			cavaloDireita.setPosicao(new Posicao(linha, 6));
+			torreDireita.setCor(cor);
+			torreDireita.setPosicao(new Posicao(linha, 7));
+
+			lugares[linha][0] = torreEsquerda;
+			lugares[linha][1] = cavaloEsquerda;
+			lugares[linha][2] = bispoEsquerda;
+			lugares[linha][3] = rainha;
+			lugares[linha][4] = rei;
+			lugares[linha][5] = bispoDireita;
+			lugares[linha][6] = cavaloDireita;
+			lugares[linha][7] = torreDireita;
 		}
-		
-		Peao pb0 = new Peao();
-		Peao pb1 = new Peao();
-		Peao pb2 = new Peao();
-		Peao pb3 = new Peao();
-		Peao pb4 = new Peao();
-		Peao pb5 = new Peao();
-		Peao pb6 = new Peao();
-		Peao pb7 = new Peao();
-		
-		pb0.setCor(CorDaPeca.BRANCA);
-		pb0.setPosicao(new Posicao(6, 0));
-		pb1.setCor(CorDaPeca.BRANCA);
-		pb1.setPosicao(new Posicao(6, 1));
-		pb2.setCor(CorDaPeca.BRANCA);
-		pb2.setPosicao(new Posicao(6, 2));
-		pb3.setCor(CorDaPeca.BRANCA);
-		pb3.setPosicao(new Posicao(6, 3));
-		pb4.setCor(CorDaPeca.BRANCA);
-		pb4.setPosicao(new Posicao(6, 4));
-		pb5.setCor(CorDaPeca.BRANCA);
-		pb5.setPosicao(new Posicao(6, 5));
-		pb6.setCor(CorDaPeca.BRANCA);
-		pb6.setPosicao(new Posicao(6, 6));
-		pb7.setCor(CorDaPeca.BRANCA);
-		pb7.setPosicao(new Posicao(6, 7));
-		
-		lugares[6][0] = pb0;
-		lugares[6][1] = pb1;
-		lugares[6][2] = pb2;
-		lugares[6][3] = pb3;
-		lugares[6][4] = pb4;
-		lugares[6][5] = pb5;
-		lugares[6][6] = pb6;
-		lugares[6][7] = pb7;
-		
-		Peao pp0 = new Peao();
-		Peao pp1 = new Peao();
-		Peao pp2 = new Peao();
-		Peao pp3 = new Peao();
-		Peao pp4 = new Peao();
-		Peao pp5 = new Peao();
-		Peao pp6 = new Peao();
-		Peao pp7 = new Peao();
-		
-		pp0.setCor(CorDaPeca.PRETA);
-		pp0.setPosicao(new Posicao(1, 0));
-		pp1.setCor(CorDaPeca.PRETA);
-		pp1.setPosicao(new Posicao(1, 1));
-		pp2.setCor(CorDaPeca.PRETA);
-		pp2.setPosicao(new Posicao(1, 2));
-		pp3.setCor(CorDaPeca.PRETA);
-		pp3.setPosicao(new Posicao(1, 3));
-		pp4.setCor(CorDaPeca.PRETA);
-		pp4.setPosicao(new Posicao(1, 4));
-		pp5.setCor(CorDaPeca.PRETA);
-		pp5.setPosicao(new Posicao(1, 5));
-		pp6.setCor(CorDaPeca.PRETA);
-		pp6.setPosicao(new Posicao(1, 6));
-		pp7.setCor(CorDaPeca.PRETA);
-		pp7.setPosicao(new Posicao(1, 7));
-		
-		lugares[1][0] = pp0;
-		lugares[1][1] = pp1;
-		lugares[1][2] = pp2;
-		lugares[1][3] = pp3;
-		lugares[1][4] = pp4;
-		lugares[1][5] = pp5;
-		lugares[1][6] = pp6;
-		lugares[1][7] = pp7;
-		
-		Torre tb0 = new Torre();
-		Cavalo cb0 = new Cavalo();
-		Bispo bb0 = new Bispo();
-		Rainha rab = new Rainha();
-		Rei reb = new Rei();
-		Bispo bb1 = new Bispo();
-		Cavalo cb1 = new Cavalo();
-		Torre tb1 = new Torre();
-		
-		tb0.setCor(CorDaPeca.BRANCA);
-		tb0.setPosicao(new Posicao(7, 0));
-		cb0.setCor(CorDaPeca.BRANCA);
-		cb0.setPosicao(new Posicao(7, 1));
-		bb0.setCor(CorDaPeca.BRANCA);
-		bb0.setPosicao(new Posicao(7, 2));
-		rab.setCor(CorDaPeca.BRANCA);
-		rab.setPosicao(new Posicao(7, 3));
-		reb.setCor(CorDaPeca.BRANCA);
-		reb.setPosicao(new Posicao(7, 4));
-		bb1.setCor(CorDaPeca.BRANCA);
-		bb1.setPosicao(new Posicao(7, 5));
-		cb1.setCor(CorDaPeca.BRANCA);
-		cb1.setPosicao(new Posicao(7, 6));
-		tb1.setCor(CorDaPeca.BRANCA);
-		tb1.setPosicao(new Posicao(7, 7));
-		
-		lugares[7][0] = tb0;
-		lugares[7][1] = cb0;
-		lugares[7][2] = bb0;
-		lugares[7][3] = rab;
-		lugares[7][4] = reb;
-		lugares[7][5] = bb1;
-		lugares[7][6] = cb1;
-		lugares[7][7] = tb1;
-		
-		Torre tp0 = new Torre();
-		Cavalo cp0 = new Cavalo();
-		Bispo bp0 = new Bispo();
-		Rainha rap = new Rainha();
-		Rei rep = new Rei();
-		Bispo bp1 = new Bispo();
-		Cavalo cp1 = new Cavalo();
-		Torre tp1 = new Torre();
-		
-		tp0.setCor(CorDaPeca.PRETA);
-		tp0.setPosicao(new Posicao(0, 0));
-		cp0.setCor(CorDaPeca.PRETA);
-		cp0.setPosicao(new Posicao(0, 1));
-		bp0.setCor(CorDaPeca.PRETA);
-		bp0.setPosicao(new Posicao(0, 2));
-		rap.setCor(CorDaPeca.PRETA);
-		rap.setPosicao(new Posicao(0, 3));
-		rep.setCor(CorDaPeca.PRETA);
-		rep.setPosicao(new Posicao(0, 4));
-		bp1.setCor(CorDaPeca.PRETA);
-		bp1.setPosicao(new Posicao(0, 5));
-		cp1.setCor(CorDaPeca.PRETA);
-		cp1.setPosicao(new Posicao(0, 6));
-		tp1.setCor(CorDaPeca.PRETA);
-		tp1.setPosicao(new Posicao(0, 7));
-		
-		lugares[0][0] = tp0;
-		lugares[0][1] = cp0;
-		lugares[0][2] = bp0;
-		lugares[0][3] = rap;
-		lugares[0][4] = rep;
-		lugares[0][5] = bp1;
-		lugares[0][6] = cp1;
-		lugares[0][7] = tp1;
-		
-		tab.setCampo(lugares);
-		tabuleiro = tab;
+
+		this.tabuleiro.setCampo(lugares);
 	}
 	
 	public void setTabuleiro(Tabuleiro tabuleiro) {
@@ -173,12 +76,12 @@ public class Jogo {
 	public void moverPeca(Peca peca, Posicao posicao) {
 		Peca[][] camAux = tabuleiro.getCampo();
 		
-		//REI PEGO?
+		// REI PEGO?
 		if(camAux[posicao.getLinha()][posicao.getColuna()] instanceof Rei) {
 			estado = EstadoDeJogo.GAMEOVER;
 		}
 		
-		//PROMOCAO DE PEAO?
+		// PROMOCAO DE PEAO?
 		if(camAux[posicao.getLinha()][posicao.getColuna()] instanceof Peao && (posicao.getLinha() == 7 || posicao.getLinha() == 0)) {
 			Rainha r = new Rainha();
 			r.setCor(peca.getCor());
@@ -191,7 +94,7 @@ public class Jogo {
 			tabuleiro.setCampo(camAux);
 		}
 		
-		// Troca a vez
+		// TROCA A VEZ
 		tabuleiro.setVezDasBrancas(!tabuleiro.isVezDasBrancas());
 	}
 	
