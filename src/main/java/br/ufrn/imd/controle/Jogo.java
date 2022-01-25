@@ -1,14 +1,16 @@
 package br.ufrn.imd.controle;
 
+import br.ufrn.imd.modelo.*;
+
 public class Jogo {
 
 	private Tabuleiro tabuleiro;
 	private EstadoDeJogo estado;
 	
-	public void Jogo() {
+	public Jogo() {
 		estado = EstadoDeJogo.START;
 		Tabuleiro tab = new Tabuleiro();
-		Peca[8][8] lugares;
+		Peca[][] lugares = new Peca[8][8];
 		
 		for(int a = 0; a < 8; a++) {
 			for(int b = 0; b < 8; b++) {
@@ -42,7 +44,14 @@ public class Jogo {
 		pb7.setCor(CorDaPeca.BRANCA);
 		pb7.setPosicao(new Posicao(6, 7));
 		
-		lugares[6] = {pb0, pb1, pb2, pb3, pb4, pb5, pb6, pb7};
+		lugares[6][0] = pb0;
+		lugares[6][1] = pb1;
+		lugares[6][2] = pb2;
+		lugares[6][3] = pb3;
+		lugares[6][4] = pb4;
+		lugares[6][5] = pb5;
+		lugares[6][6] = pb6;
+		lugares[6][7] = pb7;
 		
 		Peao pp0 = new Peao();
 		Peao pp1 = new Peao();
@@ -70,7 +79,14 @@ public class Jogo {
 		pp7.setCor(CorDaPeca.PRETA);
 		pp7.setPosicao(new Posicao(1, 7));
 		
-		lugares[1] = {pp0, pp1, pp2, pp3, pp4, pp5, pp6, pp7};
+		lugares[1][0] = pp0;
+		lugares[1][1] = pp1;
+		lugares[1][2] = pp2;
+		lugares[1][3] = pp3;
+		lugares[1][4] = pp4;
+		lugares[1][5] = pp5;
+		lugares[1][6] = pp6;
+		lugares[1][7] = pp7;
 		
 		Torre tb0 = new Torre();
 		Cavalo cb0 = new Cavalo();
@@ -98,7 +114,14 @@ public class Jogo {
 		tb1.setCor(CorDaPeca.BRANCA);
 		tb1.setPosicao(new Posicao(7, 7));
 		
-		lugares[7] = {tb0, cb0, bb0, rab, reb, bb1, cb1, tb1};
+		lugares[7][0] = tb0;
+		lugares[7][1] = cb0;
+		lugares[7][2] = bb0;
+		lugares[7][3] = rab;
+		lugares[7][4] = reb;
+		lugares[7][5] = bb1;
+		lugares[7][6] = cb1;
+		lugares[7][7] = tb1;
 		
 		Torre tp0 = new Torre();
 		Cavalo cp0 = new Cavalo();
@@ -126,7 +149,14 @@ public class Jogo {
 		tp1.setCor(CorDaPeca.PRETA);
 		tp1.setPosicao(new Posicao(0, 7));
 		
-		lugares[0] = {tp0, cp0, bp0, rap, rep, bp1, cp1, tp1};
+		lugares[0][0] = tp0;
+		lugares[0][1] = cp0;
+		lugares[0][2] = bp0;
+		lugares[0][3] = rap;
+		lugares[0][4] = rep;
+		lugares[0][5] = bp1;
+		lugares[0][6] = cp1;
+		lugares[0][7] = tp1;
 		
 		tab.setCampo(lugares);
 		tabuleiro = tab;
@@ -149,7 +179,7 @@ public class Jogo {
 		}
 		
 		//PROMOCAO DE PEAO?
-		if(camAux[posicao.getLinha()][posicao.getColuna()] instanceof Peao && (posicao.getLinha == 7 || posicao.getLinha == 0)) {
+		if(camAux[posicao.getLinha()][posicao.getColuna()] instanceof Peao && (posicao.getLinha() == 7 || posicao.getLinha() == 0)) {
 			Rainha r = new Rainha();
 			r.setCor(peca.getCor());
 			camAux[posicao.getLinha()][posicao.getColuna()] = r;
@@ -162,7 +192,7 @@ public class Jogo {
 		}
 		
 		// Troca a vez
-		tabuleiro.setVezDasBrancas(!tabuleiro.getVezDasBrancas());
+		tabuleiro.setVezDasBrancas(!tabuleiro.isVezDasBrancas());
 	}
 	
 }
