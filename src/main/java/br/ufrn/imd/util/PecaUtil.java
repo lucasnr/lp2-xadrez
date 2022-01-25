@@ -8,8 +8,11 @@ public class PecaUtil {
     public static boolean isJogadaDisponivel(Integer linha, Integer coluna, Peca peca, Tabuleiro tabuleiro) {
         Peca[][] campo = tabuleiro.getCampo();
 
-        boolean posicaoVazia = campo[linha][coluna] == null;
-        if (posicaoVazia) {
+        if (linha < 0 || coluna < 0 || linha >= campo.length || coluna >= campo[0].length) {
+            return false;
+        }
+
+        if (isPosicaoVazia(linha, coluna, tabuleiro)) {
             return true;
         }
 
@@ -25,5 +28,10 @@ public class PecaUtil {
 
         boolean posicaoComPecaDeOutraCor = pecaNaPosicao.getCor() != cor;
         return posicaoComPecaDeOutraCor;
+    }
+
+    public static boolean isPosicaoVazia(Integer linha, Integer coluna, Tabuleiro tabuleiro) {
+        Peca[][] campo = tabuleiro.getCampo();
+        return campo[linha][coluna] == null;
     }
 }
