@@ -20,39 +20,42 @@ public class Cavalo extends Peca {
     @Override
     public List<Posicao> informarPossiveisJogadas(Tabuleiro tabuleiro) {
         List<Posicao> posicoes = new ArrayList<>();
+
         Posicao posicao = this.getPosicao();
+        Integer linha = posicao.getLinha();
+        Integer coluna = posicao.getColuna();
 
         // 2x - CIMA E ESQUERDA
-        if (isJogadaDisponivel(posicao.getLinha() - 2, posicao.getColuna() - 1, this, tabuleiro)) {
-            posicoes.add(new Posicao(posicao.getLinha() - 2, posicao.getColuna() - 1));
+        if (isJogadaDisponivel(linha - 2, coluna - 1, this, tabuleiro)) {
+            posicoes.add(new Posicao(linha - 2, coluna - 1));
         }
         // 2x - CIMA E DIREITA
-        if (isJogadaDisponivel(posicao.getLinha() - 2, posicao.getColuna() + 1, this, tabuleiro)) {
-            posicoes.add(new Posicao(posicao.getLinha() - 2, posicao.getColuna() + 1));
+        if (isJogadaDisponivel(linha - 2, coluna + 1, this, tabuleiro)) {
+            posicoes.add(new Posicao(linha - 2, coluna + 1));
         }
 	    // 2x - BAIXO E ESQUERDA
-        if (isJogadaDisponivel(posicao.getLinha() + 2, posicao.getColuna() - 1, this, tabuleiro)) {
-            posicoes.add(new Posicao(posicao.getLinha() + 2, posicao.getColuna() - 1));
+        if (isJogadaDisponivel(linha + 2, coluna - 1, this, tabuleiro)) {
+            posicoes.add(new Posicao(linha + 2, coluna - 1));
         }
         // 2x - BAIXO E DIREITA
-        if (isJogadaDisponivel(posicao.getLinha() + 2, posicao.getColuna() + 1, this, tabuleiro)) {
-            posicoes.add(new Posicao(posicao.getLinha() + 2, posicao.getColuna() + 1));
+        if (isJogadaDisponivel(linha + 2, coluna + 1, this, tabuleiro)) {
+            posicoes.add(new Posicao(linha + 2, coluna + 1));
         }
         // 2x - ESQUERDA E CIMA
-        if (isJogadaDisponivel(posicao.getLinha() - 1, posicao.getColuna() - 2, this, tabuleiro)) {
-            posicoes.add(new Posicao(posicao.getLinha() - 1, posicao.getColuna() - 2));
+        if (isJogadaDisponivel(linha - 1, coluna - 2, this, tabuleiro)) {
+            posicoes.add(new Posicao(linha - 1, coluna - 2));
         }
         // 2x - ESQUERDA E BAIXO
-        if (isJogadaDisponivel(posicao.getLinha() + 1, posicao.getColuna() - 2, this, tabuleiro)) {
-            posicoes.add(new Posicao(posicao.getLinha() + 1, posicao.getColuna() - 2));
+        if (isJogadaDisponivel(linha + 1, coluna - 2, this, tabuleiro)) {
+            posicoes.add(new Posicao(linha + 1, coluna - 2));
         }
         // 2x - DIREITA E CIMA
-        if (isJogadaDisponivel(posicao.getLinha() - 1, posicao.getColuna() + 2, this, tabuleiro)) {
-            posicoes.add(new Posicao(posicao.getLinha() - 1, posicao.getColuna() + 2));
+        if (isJogadaDisponivel(linha - 1, coluna + 2, this, tabuleiro)) {
+            posicoes.add(new Posicao(linha - 1, coluna + 2));
         }
         // 2x - DIREITA E BAIXO
-        if (isJogadaDisponivel(posicao.getLinha() + 1, posicao.getColuna() + 2, this, tabuleiro)) {
-            posicoes.add(new Posicao(posicao.getLinha() + 1, posicao.getColuna() + 2));
+        if (isJogadaDisponivel(linha + 1, coluna + 2, this, tabuleiro)) {
+            posicoes.add(new Posicao(linha + 1, coluna + 2));
         }
 
         return posicoes;
