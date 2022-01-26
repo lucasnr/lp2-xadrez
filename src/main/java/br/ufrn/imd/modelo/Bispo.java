@@ -11,9 +11,9 @@ public class Bispo extends Peca {
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {
-            return "caminho/para/imagem/da/bispo/branca.png";
+            return "../../../../../../../Sprites/white_bishop.png";
         } else {
-            return "caminho/para/imagem/da/bispo/preta.png";
+            return "../../../../../../../Sprites/black_bishop.png";
         }
     }
 
