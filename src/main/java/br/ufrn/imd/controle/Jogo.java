@@ -84,17 +84,18 @@ public class Jogo {
 			estado = EstadoDeJogo.GAMEOVER;
 		}
 		
+		// MOVER
+		campo[linha][coluna] = peca;
+		campo[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = null;
+		peca.setPosicao(posicao);
+		tabuleiro.setCampo(campo);
+		
 		// PROMOCAO DE PEAO?
 		if(campo[linha][coluna] instanceof Peao && (linha == 7 || linha == 0)) {
 			Rainha r = new Rainha();
 			r.setCor(peca.getCor());
 			campo[linha][coluna] = r;
 			r.setPosicao(posicao);
-			tabuleiro.setCampo(campo);
-		} else {
-			campo[linha][coluna] = peca;
-			campo[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = null;
-			peca.setPosicao(posicao);
 			tabuleiro.setCampo(campo);
 		}
 		
