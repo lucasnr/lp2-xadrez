@@ -1,7 +1,6 @@
 package br.ufrn.imd.visao;
 
 import java.awt.Container;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -12,107 +11,122 @@ import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.synth.ColorType;
 
 import br.ufrn.imd.controle.Jogo;
 import br.ufrn.imd.modelo.CorDaPeca;
 import br.ufrn.imd.modelo.Peca;
 import br.ufrn.imd.modelo.Posicao;
+import br.ufrn.imd.modelo.Tabuleiro;
 
-public class TelaJogo extends JFrame implements ActionListener{
-	
+public class TelaJogo extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private static Jogo jogo;
-	
+
     private JButton[][] quadrados = new JButton[8][8];
 
+	private Jogo jogo;
+	private Peca pecaSelecionada = null;
+
 	public static void main(String[] args) {
-		jogo = new Jogo();
 		TelaJogo tela = new TelaJogo();
 		tela.setVisible(true);
 	}
 
 	public TelaJogo() {
-		
+		this.jogo = new Jogo();
+
 		Container ctn = getContentPane();
 		ctn.setLayout(new GridLayout(8, 9, 0, 0));
 		
 		for(int a = 0; a < 8; a++) {
 			for(int b = 0; b < 8; b++) {
-				String act = ""+a+""+b+"000";
-				quadrados[a][b] = new JButton("");
-				quadrados[a][b].addActionListener(this);
-				quadrados[a][b].setActionCommand(act);
-				if((a + b) % 2 == 0) {
-					quadrados[a][b].setBackground(Color.WHITE);
-				} else {
-					quadrados[a][b].setBackground(Color.BLACK);
-				}
+				String command = a + "-" + b;
+				JButton botao = new JButton("");
+				botao.addActionListener(this);
+				botao.setActionCommand(command);
+
+				ctn.add(botao);
+				quadrados[a][b] = botao;
 			}
 		}
 
-		Peca[][] campo = jogo.getTabuleiro().getCampo();
-		for(int a = 0; a < 8; a++) {
-			for(int b = 0; b < 8; b++) {
-				Peca peca = campo[a][b];
-				if (peca != null) {
-					URL img = this.getClass().getResource(peca.getImagem());
-					quadrados[a][b].setIcon(new ImageIcon(img));
-				}
-			}
-		}
-		
-		for(int a = 0; a < 8; a++) {
-			for(int b = 0; b < 8; b++) {
-				ctn.add(quadrados[a][b]);
-			}
-		}
+		this.atualizarTabuleiro();
 		
 		setSize(800,600);
 		setResizable(false);
-		setTitle("Jogo de xadrez");
+		setTitle("Jogo de Xadrez");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int linha = Character.getNumericValue(e.getActionCommand().charAt(0));
-		int coluna = Character.getNumericValue(e.getActionCommand().charAt(1));
-		int moveplace = Character.getNumericValue(e.getActionCommand().charAt(2));
-		
-		Peca quadClic = jogo.getTabuleiro().getCampo()[linha][coluna];
-		
+		String[] posicaoSelecionadda = e.getActionCommand().split("-");
+		int linha = Integer.parseInt(posicaoSelecionadda[0]);
+		int coluna = Integer.parseInt(posicaoSelecionadda[1]);
+
+		Tabuleiro tabuleiro = jogo.getTabuleiro();
+		Peca peca = tabuleiro.getCampo()[linha][coluna];
+
 		CorDaPeca corDaVez = CorDaPeca.PRETA;
-		if(jogo.getTabuleiro().isVezDasBrancas()) {
+		if(tabuleiro.isVezDasBrancas()) {
 			corDaVez = CorDaPeca.BRANCA;
 		}
-		
-		if(moveplace == 1) {
-			int lp = Character.getNumericValue(e.getActionCommand().charAt(3));
-			int cp = Character.getNumericValue(e.getActionCommand().charAt(4));
-			Peca pecam = jogo.getTabuleiro().getCampo()[lp][cp];
-			jogo.moverPeca(pecam, new Posicao(lp, cp));
-			
-			//limpar campo dos moveplates
-			for(int a = 0; a < 8; a++) {
-				for(int b = 0; b < 8; b++) {
-					if(quadrados[a][b].getActionCommand().charAt(2) == 1) {
-						String normalAct = ""+a+b+"000";
-						quadrados[a][b].setActionCommand(normalAct);
-						//quadrados[a][b].setBorder((new LineBorder(Color.BLACK)));
-						quadrados[a][b].setBorder((UIManager.getBorder("Button.border")));
-					}
-				}
+
+		if (pecaSelecionada == null) {
+			if (peca == null) {
+				return;
 			}
-		} else if(quadClic != null) {
-			if(quadClic.getCor() == corDaVez) {
-				List<Posicao> jogadas = quadClic.informarPossiveisJogadas(jogo.getTabuleiro());
-				for(int x = 0; x < jogadas.size(); x++) {
-					quadrados[jogadas.get(x).getLinha()][jogadas.get(x).getColuna()].setBorder((new LineBorder(Color.BLUE)));
+			if (peca.getCor() != corDaVez) {
+				return;
+			}
+
+			List<Posicao> posicoes = peca.informarPossiveisJogadas(tabuleiro);
+			if (posicoes.size() == 0) {
+				return;
+			}
+
+			this.pecaSelecionada = peca;
+			for (Posicao posicao : posicoes) {
+				JButton botao = quadrados[posicao.getLinha()][posicao.getColuna()];
+				botao.setBackground(new Color(235, 217, 0));
+			}
+		} else {
+			List<Posicao> posicoes = this.pecaSelecionada.informarPossiveisJogadas(tabuleiro);
+
+			Posicao selecionada = new Posicao(linha, coluna);
+			if (selecionada.equals(this.pecaSelecionada.getPosicao())) {
+				// cancelar seleção
+				pecaSelecionada = null;
+				this.atualizarTabuleiro();
+			}
+
+			if (posicoes.contains(selecionada)) {
+				this.jogo.moverPeca(this.pecaSelecionada, selecionada);
+				this.pecaSelecionada = null;
+				this.atualizarTabuleiro();
+			}
+		}
+
+	}
+
+	private void atualizarTabuleiro() {
+		Peca[][] campo = jogo.getTabuleiro().getCampo();
+		for(int a = 0; a < 8; a++) {
+			for(int b = 0; b < 8; b++) {
+				Peca peca = campo[a][b];
+				JButton quadrado = quadrados[a][b];
+
+				if (peca == null) {
+					quadrado.setIcon(null);
+				} else {
+					URL img = this.getClass().getResource(peca.getImagem());
+					quadrado.setIcon(new ImageIcon(img));
+				}
+
+				if((a + b) % 2 == 0) {
+					quadrado.setBackground(Color.WHITE);
+				} else {
+					quadrado.setBackground(Color.BLACK);
 				}
 			}
 		}

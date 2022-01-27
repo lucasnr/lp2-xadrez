@@ -1,5 +1,7 @@
 package br.ufrn.imd.modelo;
 
+import java.util.Objects;
+
 public class Posicao {
     private Integer linha;
     private Integer coluna;
@@ -34,5 +36,18 @@ public class Posicao {
                 "linha=" + linha +
                 ", coluna=" + coluna +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Posicao posicao = (Posicao) o;
+        return Objects.equals(linha, posicao.linha) && Objects.equals(coluna, posicao.coluna);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(linha, coluna);
     }
 }

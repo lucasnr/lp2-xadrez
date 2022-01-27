@@ -74,24 +74,28 @@ public class Jogo {
 	}
 	
 	public void moverPeca(Peca peca, Posicao posicao) {
-		Peca[][] camAux = tabuleiro.getCampo();
-		
+		Peca[][] campo = tabuleiro.getCampo();
+
+		Integer linha = posicao.getLinha();
+		Integer coluna = posicao.getColuna();
+
 		// REI PEGO?
-		if(camAux[posicao.getLinha()][posicao.getColuna()] instanceof Rei) {
+		if(campo[linha][coluna] instanceof Rei) {
 			estado = EstadoDeJogo.GAMEOVER;
 		}
 		
 		// PROMOCAO DE PEAO?
-		if(camAux[posicao.getLinha()][posicao.getColuna()] instanceof Peao && (posicao.getLinha() == 7 || posicao.getLinha() == 0)) {
+		if(campo[linha][coluna] instanceof Peao && (linha == 7 || linha == 0)) {
 			Rainha r = new Rainha();
 			r.setCor(peca.getCor());
-			camAux[posicao.getLinha()][posicao.getColuna()] = r;
+			campo[linha][coluna] = r;
 			r.setPosicao(posicao);
-			tabuleiro.setCampo(camAux);
+			tabuleiro.setCampo(campo);
 		} else {
-			camAux[posicao.getLinha()][posicao.getColuna()] = peca;
+			campo[linha][coluna] = peca;
+			campo[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = null;
 			peca.setPosicao(posicao);
-			tabuleiro.setCampo(camAux);
+			tabuleiro.setCampo(campo);
 		}
 		
 		// TROCA A VEZ
