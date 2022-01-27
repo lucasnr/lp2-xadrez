@@ -8,9 +8,9 @@ public class Rainha extends Peca {
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {
-            return "../../../../../../../Sprites/white_queen.png";
+            return "../../../../../../../sprites/white_queen.png";
         } else {
-            return "../../../../../../../Sprites/black_queen.png";
+            return "../../../../../../../sprites/black_queen.png";
         }
     }
 

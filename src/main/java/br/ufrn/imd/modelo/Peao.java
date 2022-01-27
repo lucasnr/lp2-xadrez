@@ -4,74 +4,82 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static br.ufrn.imd.util.PecaUtil.isJogadaDisponivel;
+import static br.ufrn.imd.util.PecaUtil.isPosicaoVazia;
 
 public class Peao extends Peca {
 
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {
-            return "../../../../../../../Sprites/white_pawn.png";
+            return "../../../../../../../sprites/white_pawn.png";
         } else {
-            return "../../../../../../../Sprites/black_pawn.png";
+            return "../../../../../../../sprites/black_pawn.png";
         }
     }
 
     @Override
     public List<Posicao> informarPossiveisJogadas(Tabuleiro tabuleiro) {
         List<Posicao> posicoes = new ArrayList<>();
-        Posicao posicao = this.getPosicao();
+
+		Posicao posicao = this.getPosicao();
+		Integer linha = posicao.getLinha();
+		Integer coluna = posicao.getColuna();
+
+		Peca[][] tab = tabuleiro.getCampo();
         
-        Peca[][] tab = tabuleiro.getCampo();
-        
-        if(this.getCor()==CorDaPeca.BRANCA) {
+        if (this.getCor()==CorDaPeca.BRANCA) {
         	// PARA CIMA
-        	if (isJogadaDisponivel(posicao.getLinha() - 1, posicao.getColuna(), this, tabuleiro) && tab[posicao.getLinha() - 1][posicao.getColuna()] == null) {
-                posicoes.add(new Posicao(posicao.getLinha() - 1, posicao.getColuna()));
+        	if (linha > 0 && isPosicaoVazia(linha - 1, coluna, tabuleiro)) {
+                posicoes.add(new Posicao(linha - 1, coluna));
             }
         	
         	// PASSO DUPLO
-        	if (posicao.getLinha() == 6 && isJogadaDisponivel(posicao.getLinha() - 2, posicao.getColuna(), this, tabuleiro) && tab[posicao.getLinha() - 2][posicao.getColuna()] == null) {
-        		posicoes.add(new Posicao(posicao.getLinha() - 2, posicao.getColuna()));
+        	if (linha == 6 && isPosicaoVazia(linha - 1, coluna, tabuleiro) && isPosicaoVazia(linha - 2, coluna, tabuleiro)) {
+        		posicoes.add(new Posicao(linha - 2, coluna));
         	}
         	
         	//COMER NA SUPERIOR ESQUERDA
-        	if(tab[posicao.getLinha() - 1][posicao.getColuna() - 1] != null) {
-        		if(tab[posicao.getLinha() - 1][posicao.getColuna() - 1].getCor() != this.getCor()) {
-            		posicoes.add(new Posicao(posicao.getLinha() - 1, posicao.getColuna() - 1));
-            	}
-        	}
+			if (linha > 0 && coluna > 0) {
+				Peca superiorEsquerda = tab[linha - 1][coluna - 1];
+				if (superiorEsquerda != null && superiorEsquerda.getCor() != this.getCor()) {
+					posicoes.add(new Posicao(linha - 1, coluna - 1));
+				}
+			}
         	
         	// COMER NA SUPERIOR DIREITA
-        	if(tab[posicao.getLinha() - 1][posicao.getColuna() + 1] != null) {
-        		if(tab[posicao.getLinha() - 1][posicao.getColuna() + 1].getCor() != this.getCor()) {
-            		posicoes.add(new Posicao(posicao.getLinha() - 1, posicao.getColuna() + 1));
-            	}
-        	}
+			if (linha > 0 && coluna < 8) {
+				Peca superiorDireita = tab[linha - 1][coluna + 1];
+				if (superiorDireita != null && superiorDireita.getCor() != this.getCor()) {
+					posicoes.add(new Posicao(linha - 1, coluna + 1));
+				}
+			}
         	
         } else {
         	// PARA BAIXO
-        	if (isJogadaDisponivel(posicao.getLinha() + 1, posicao.getColuna(), this, tabuleiro) && tab[posicao.getLinha() + 1][posicao.getColuna()] == null) {
-                posicoes.add(new Posicao(posicao.getLinha() + 1, posicao.getColuna()));
-            }
+			if (linha < 8 && isPosicaoVazia(linha + 1, coluna, tabuleiro)) {
+				posicoes.add(new Posicao(linha + 1, coluna));
+			}
         	
         	// PASSO DUPLO
-        	if (posicao.getLinha() == 1 && isJogadaDisponivel(posicao.getLinha() + 2, posicao.getColuna(), this, tabuleiro) && tab[posicao.getLinha() + 2][posicao.getColuna()] == null) {
-        		posicoes.add(new Posicao(posicao.getLinha() + 2, posicao.getColuna()));
-        	}
+			if (linha == 1 && isPosicaoVazia(linha + 1, coluna, tabuleiro) && isPosicaoVazia(linha + 2, coluna, tabuleiro)) {
+				posicoes.add(new Posicao(linha + 2, coluna));
+			}
         	
         	// COMER NA INFERIOR ESQUERDA
-        	if(tab[posicao.getLinha() + 1][posicao.getColuna() - 1] != null) {
-        		if(tab[posicao.getLinha() + 1][posicao.getColuna() - 1].getCor() != this.getCor()) {
-            		posicoes.add(new Posicao(posicao.getLinha()  +1, posicao.getColuna() - 1));
-            	}
-        	}
+			if (linha < 8 && coluna > 0) {
+				Peca inferiorEsquerda = tab[linha + 1][coluna - 1];
+				if (inferiorEsquerda != null && inferiorEsquerda.getCor() != this.getCor()) {
+					posicoes.add(new Posicao(linha +1, coluna - 1));
+				}
+			}
         	
         	// COMER NA INFERIOR DIREITA
-        	if(tab[posicao.getLinha() + 1][posicao.getColuna() + 1] != null) {
-        		if(tab[posicao.getLinha() + 1][posicao.getColuna() + 1].getCor() != this.getCor()) {
-            		posicoes.add(new Posicao(posicao.getLinha() + 1, posicao.getColuna() + 1));
-            	}
-        	}
+			if (linha < 8 && coluna < 8) {
+				Peca inferiorDireita = tab[linha + 1][coluna + 1];
+				if (inferiorDireita != null && inferiorDireita.getCor() != this.getCor()) {
+					posicoes.add(new Posicao(linha + 1, coluna + 1));
+				}
+			}
         }
         
 
