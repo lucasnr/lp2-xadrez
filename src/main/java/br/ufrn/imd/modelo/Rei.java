@@ -10,9 +10,9 @@ public class Rei extends Peca {
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {
-            return "../../../../../../../sprites/white_king.png";
+            return "/sprites/white_king.png";
         } else {
-            return "../../../../../../../sprites/black_king.png";
+            return "/sprites/black_king.png";
         }
     }
 

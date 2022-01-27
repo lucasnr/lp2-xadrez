@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.List;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -29,8 +30,7 @@ public class TelaJogo extends JFrame implements ActionListener{
     private JButton[][] quadrados = new JButton[8][8];
 
 	public static void main(String[] args) {
-		Jogo j = new Jogo();
-		jogo = j;
+		jogo = new Jogo();
 		TelaJogo tela = new TelaJogo();
 		tela.setVisible(true);
 	}
@@ -53,11 +53,14 @@ public class TelaJogo extends JFrame implements ActionListener{
 				}
 			}
 		}
-		
+
+		Peca[][] campo = jogo.getTabuleiro().getCampo();
 		for(int a = 0; a < 8; a++) {
 			for(int b = 0; b < 8; b++) {
-				if(jogo.getTabuleiro().getCampo()[a][b] != null) {
-					quadrados[a][b].setIcon(new ImageIcon(jogo.getTabuleiro().getCampo()[a][b].getImagem()));
+				Peca peca = campo[a][b];
+				if (peca != null) {
+					URL img = this.getClass().getResource(peca.getImagem());
+					quadrados[a][b].setIcon(new ImageIcon(img));
 				}
 			}
 		}

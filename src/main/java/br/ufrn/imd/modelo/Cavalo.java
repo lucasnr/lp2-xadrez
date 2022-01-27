@@ -10,9 +10,9 @@ public class Cavalo extends Peca {
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {
-            return "../../../../../../../sprites/white_knight.png";
+            return "/sprites/white_knight.png";
         } else {
-            return "../../../../../../../sprites/black_knight.png";
+            return "/sprites/black_knight.png";
         }
     }
 

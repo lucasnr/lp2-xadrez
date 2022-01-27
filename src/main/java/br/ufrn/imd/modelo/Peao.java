@@ -11,9 +11,9 @@ public class Peao extends Peca {
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {
-            return "../../../../../../../sprites/white_pawn.png";
+            return "/sprites/white_pawn.png";
         } else {
-            return "../../../../../../../sprites/black_pawn.png";
+            return "/sprites/black_pawn.png";
         }
     }
 

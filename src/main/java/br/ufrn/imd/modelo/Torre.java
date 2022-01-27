@@ -11,9 +11,9 @@ public class Torre extends Peca {
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {
-            return "../../../../../../../sprites/white_rook.png";
+            return "/sprites/white_rook.png";
         } else {
-            return "../../../../../../../sprites/black_rook.png";
+            return "/sprites/black_rook.png";
         }
     }
 
