@@ -47,7 +47,7 @@ public class Peao extends Peca {
 			}
         	
         	// COMER NA SUPERIOR DIREITA
-			if (linha > 0 && coluna < 8) {
+			if (linha > 0 && coluna < 7) {
 				Peca superiorDireita = tab[linha - 1][coluna + 1];
 				if (superiorDireita != null && superiorDireita.getCor() != this.getCor()) {
 					posicoes.add(new Posicao(linha - 1, coluna + 1));
@@ -74,7 +74,7 @@ public class Peao extends Peca {
 			}
         	
         	// COMER NA INFERIOR DIREITA
-			if (linha < 8 && coluna < 8) {
+			if (linha < 8 && coluna < 7) {
 				Peca inferiorDireita = tab[linha + 1][coluna + 1];
 				if (inferiorDireita != null && inferiorDireita.getCor() != this.getCor()) {
 					posicoes.add(new Posicao(linha + 1, coluna + 1));
