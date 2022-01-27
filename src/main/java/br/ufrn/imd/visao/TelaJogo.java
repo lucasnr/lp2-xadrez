@@ -11,10 +11,13 @@ import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
 import br.ufrn.imd.controle.Jogo;
 import br.ufrn.imd.modelo.CorDaPeca;
+import br.ufrn.imd.modelo.EstadoDeJogo;
 import br.ufrn.imd.modelo.Peca;
 import br.ufrn.imd.modelo.Posicao;
 import br.ufrn.imd.modelo.Tabuleiro;
@@ -31,8 +34,8 @@ public class TelaJogo extends JFrame implements ActionListener {
 		TelaJogo tela = new TelaJogo();
 		tela.setVisible(true);
 	}
-
-	public TelaJogo() {
+	
+	public void iniciarJogo() {
 		this.jogo = new Jogo();
 
 		Container ctn = getContentPane();
@@ -51,6 +54,10 @@ public class TelaJogo extends JFrame implements ActionListener {
 		}
 
 		this.atualizarTabuleiro();
+	}
+
+	public TelaJogo() {
+		iniciarJogo();
 		
 		setSize(800,600);
 		setResizable(false);
@@ -60,6 +67,17 @@ public class TelaJogo extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//RESETAR?
+		if(e.getActionCommand().equals("reset")) {
+			System.out.println("denovo!");
+			Container ctn = getContentPane();
+			ctn.removeAll();
+			
+			iniciarJogo();
+			return;
+		}
+		
+		//NÃO RESETAR
 		String[] posicaoSelecionadda = e.getActionCommand().split("-");
 		int linha = Integer.parseInt(posicaoSelecionadda[0]);
 		int coluna = Integer.parseInt(posicaoSelecionadda[1]);
@@ -129,6 +147,39 @@ public class TelaJogo extends JFrame implements ActionListener {
 					quadrado.setBackground(Color.BLACK);
 				}
 			}
+		}
+		
+		if(jogo.getEstado() == EstadoDeJogo.GAMEOVER) {
+			System.out.println("Game over");
+
+			String vencedor = "Vitória das peças ";
+			
+			if(jogo.getTabuleiro().isVezDasBrancas()) {
+				System.out.println("Vitória das peças pretas");
+				vencedor = vencedor + "pretas.";
+			} else {
+				System.out.println("Vitória das peças brancas");
+				vencedor = vencedor + "brancas.";
+			}
+			
+			JInternalFrame telaDeMensagem = new JInternalFrame();
+			telaDeMensagem.setSize(800,600);
+			telaDeMensagem.setResizable(false);
+			telaDeMensagem.setVisible(true);
+			
+			JLabel vcd = new JLabel(vencedor);
+			vcd.setBounds(100,100,100,100);
+			
+			JButton denovo = new JButton("Recomeçar?");
+			denovo.setBounds(200,200,100,100);
+			denovo.addActionListener(this);
+			denovo.setActionCommand("reset");
+			
+			Container ctn = getContentPane();
+			ctn.removeAll();
+			ctn.add(telaDeMensagem);
+			ctn.add(vcd);
+			ctn.add(denovo);
 		}
 	}
 
