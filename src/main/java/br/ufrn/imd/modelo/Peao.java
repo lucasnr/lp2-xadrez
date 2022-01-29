@@ -5,6 +5,12 @@ import java.util.List;
 
 import static br.ufrn.imd.util.PecaUtil.isPosicaoVazia;
 
+/** Classe da peça peão onde serão mantidos os valores e métodos dela
+ * 
+ * @author Brayan
+ * @version 1.0
+ * 
+ */
 public class Peao extends Peca {
 
     @Override

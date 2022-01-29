@@ -6,6 +6,12 @@ import java.util.List;
 import static br.ufrn.imd.util.PecaUtil.isColisao;
 import static br.ufrn.imd.util.PecaUtil.isJogadaDisponivel;
 
+/** Classe da peça torre onde serão mantidos os valores e métodos dela
+ * 
+ * @author Lucas
+ * @version 1.0
+ *
+ */
 public class Torre extends Peca {
 
     @Override
