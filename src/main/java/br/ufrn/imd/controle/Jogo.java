@@ -2,16 +2,20 @@ package br.ufrn.imd.controle;
 
 import br.ufrn.imd.modelo.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Jogo {
 
-	private Tabuleiro tabuleiro;
 	private EstadoDeJogo estado;
-	
+	private Tabuleiro tabuleiro;
+	private boolean vezDasBrancas;
+	private Posicao xeque;
+
 	public Jogo() {
 		this.estado = EstadoDeJogo.START;
 		this.tabuleiro = new Tabuleiro();
+		this.vezDasBrancas = true;
 
 		Peca[][] lugares = new Peca[8][8];
 
@@ -67,35 +71,35 @@ public class Jogo {
 		this.tabuleiro.setCampo(lugares);
 	}
 
-	public Rei moverPeca(Peca peca, Posicao posicao) {
-		Peca[][] campo = tabuleiro.getCampo();
+	public void moverPeca(Peca peca, Posicao posicao) {
+		Peca[][] campo = this.tabuleiro.getCampo();
 
 		Integer linha = posicao.getLinha();
 		Integer coluna = posicao.getColuna();
 
-		// REI PEGO?
-		if (campo[linha][coluna] instanceof Rei) {
-			estado = EstadoDeJogo.GAMEOVER;
-		}
-
-		// MOVER
+		// Movimentação da peça
 		campo[linha][coluna] = peca;
 		campo[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = null;
 		peca.setPosicao(posicao);
 
-		// PROMOCAO DE PEAO?
+		// Promoção de Peão
 		if (campo[linha][coluna] instanceof Peao && (linha == 7 || linha == 0)) {
-			Rainha r = new Rainha();
-			r.setCor(peca.getCor());
-			campo[linha][coluna] = r;
-			r.setPosicao(posicao);
+			Rainha rainha = new Rainha();
+			rainha.setCor(peca.getCor());
+			campo[linha][coluna] = rainha;
+			rainha.setPosicao(posicao);
 		}
 		
-		// TROCA A VEZ
-		tabuleiro.setVezDasBrancas(!tabuleiro.isVezDasBrancas());
+		// Mudança da vez
+		this.vezDasBrancas = !this.vezDasBrancas;
 
 		Rei reiEmXeque = getReiEmXeque();
-		return reiEmXeque;
+		if (reiEmXeque != null) {
+			this.xeque = reiEmXeque.getPosicao();
+			this.verificarXequeMate();
+		} else {
+			this.xeque = null;
+		}
 	}
 
 	private Rei getReiEmXeque() {
@@ -111,9 +115,8 @@ public class Jogo {
 				List<Posicao> posicoes = peca.informarPossiveisJogadas(this.tabuleiro);
 				for (Posicao posicao : posicoes) {
 					Peca inimigo = campo[posicao.getLinha()][posicao.getColuna()];
-					if (inimigo != null && inimigo instanceof Rei) {
+					if (inimigo != null && inimigo instanceof Rei)
 						return (Rei) inimigo;
-					}
 				}
 			}
 		}
@@ -139,8 +142,41 @@ public class Jogo {
 		return movimentoValido;
 	}
 
-	public void setTabuleiro(Tabuleiro tabuleiro) {
-		this.tabuleiro = tabuleiro;
+	public List<Posicao> informarPossiveisJogadas(Peca peca) {
+		if (peca == null) {
+			return new ArrayList<>();
+		}
+
+		CorDaPeca corDaVez = this.vezDasBrancas ? CorDaPeca.BRANCA : CorDaPeca.PRETA;
+		if (peca.getCor() != corDaVez) {
+			return new ArrayList<>();
+		}
+
+		List<Posicao> posicoes = peca.informarPossiveisJogadas(this.tabuleiro);
+		if (this.xeque != null || peca instanceof Rei) {
+			// Remover possiveis jogadas que não tiram o xeque do rei
+			for (int i = 0; i < posicoes.size(); i++) {
+				Posicao posicao = posicoes.get(i);
+				if (!this.isMovimentoValidoTendoReiEmXeque(peca, posicao))
+					posicoes.remove(i--);
+			}
+		}
+
+		return posicoes;
+	}
+
+	private void verificarXequeMate() {
+		if (this.xeque == null) {
+			return;
+		}
+
+		Peca peca = this.tabuleiro.getCampo()[this.xeque.getLinha()][this.xeque.getColuna()];
+		List<Posicao> posicoes = this.informarPossiveisJogadas(peca);
+
+		boolean xequeMate = posicoes.size() == 0;
+		if (xequeMate) {
+			this.estado = EstadoDeJogo.GAMEOVER;
+		}
 	}
 
 	public Tabuleiro getTabuleiro() {
@@ -151,7 +187,11 @@ public class Jogo {
 		return estado;
 	}
 
-	public void setEstado(EstadoDeJogo estado) {
-		this.estado = estado;
+	public Posicao getXeque() {
+		return this.xeque;
+	}
+
+	public boolean isVezDasBrancas() {
+		return this.vezDasBrancas;
 	}
 }

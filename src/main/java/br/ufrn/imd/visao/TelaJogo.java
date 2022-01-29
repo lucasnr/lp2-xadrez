@@ -16,8 +16,7 @@ public class TelaJogo extends JFrame implements ActionListener {
     private JButton[][] quadrados = new JButton[8][8];
 
 	private Jogo jogo;
-	private Peca pecaSelecionada;
-	private Posicao xeque;
+	private Peca selecionada;
 
 	public static void main(String[] args) {
 		TelaJogo tela = new TelaJogo();
@@ -25,7 +24,7 @@ public class TelaJogo extends JFrame implements ActionListener {
 	}
 
 	public TelaJogo() {
-		iniciarJogo();
+		this.iniciarJogo();
 
 		setSize(800,600);
 		setLocationRelativeTo(null);
@@ -37,19 +36,19 @@ public class TelaJogo extends JFrame implements ActionListener {
 	public void iniciarJogo() {
 		this.jogo = new Jogo();
 
-		Container ctn = getContentPane();
-		ctn.removeAll();
-		ctn.setLayout(new GridLayout(8, 9, 0, 0));
+		Container container = this.getContentPane();
+		container.removeAll();
+		container.setLayout(new GridLayout(8, 9, 0, 0));
 
-		for(int a = 0; a < 8; a++) {
-			for(int b = 0; b < 8; b++) {
-				String command = a + "-" + b;
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++) {
+				String command = i + "-" + j;
 				JButton botao = new JButton("");
 				botao.addActionListener(this);
 				botao.setActionCommand(command);
 
-				ctn.add(botao);
-				quadrados[a][b] = botao;
+				container.add(botao);
+				this.quadrados[i][j] = botao;
 			}
 		}
 
@@ -58,90 +57,49 @@ public class TelaJogo extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// RESETAR
-		if(e.getActionCommand().equals("reset")) {
-			Container ctn = getContentPane();
-			ctn.removeAll();
-			
-			iniciarJogo();
-			return;
-		}
-		
-		// NÃO RESETAR
-		String[] posicaoSelecionadda = e.getActionCommand().split("-");
-		int linha = Integer.parseInt(posicaoSelecionadda[0]);
-		int coluna = Integer.parseInt(posicaoSelecionadda[1]);
+		String[] command = e.getActionCommand().split("-");
+		int linha = Integer.parseInt(command[0]);
+		int coluna = Integer.parseInt(command[1]);
 
-		Tabuleiro tabuleiro = jogo.getTabuleiro();
-		Peca peca = tabuleiro.getCampo()[linha][coluna];
+		Tabuleiro tabuleiro = this.jogo.getTabuleiro();
 
-		CorDaPeca corDaVez = CorDaPeca.PRETA;
-		if(tabuleiro.isVezDasBrancas()) {
-			corDaVez = CorDaPeca.BRANCA;
-		}
-
-		if (pecaSelecionada == null) {
-			if (peca == null) {
-				return;
-			}
-			if (peca.getCor() != corDaVez) {
-				return;
-			}
-
-			List<Posicao> posicoes = peca.informarPossiveisJogadas(tabuleiro);
-
-			// Remover possiveis jogadas que não tiram o xeque do rei
-			if (this.xeque != null || peca instanceof Rei) {
-				for (int i = 0; i < posicoes.size(); i++) {
-					Posicao posicao = posicoes.get(i);
-					boolean movimentoValido = this.jogo.isMovimentoValidoTendoReiEmXeque(peca, posicao);
-					if (!movimentoValido)
-						posicoes.remove(i--);
-				}
-			}
-
+		if (selecionada == null) {
+			Peca peca = tabuleiro.getCampo()[linha][coluna];
+			List<Posicao> posicoes = this.jogo.informarPossiveisJogadas(peca);
 			// Não há possiveis movimentos
-			if (posicoes.size() == 0) {
+			if (posicoes.size() == 0)
 				return;
-			}
 
-			this.pecaSelecionada = peca;
+			this.selecionada = peca;
 			for (Posicao posicao : posicoes) {
-				JButton botao = quadrados[posicao.getLinha()][posicao.getColuna()];
+				JButton botao = this.quadrados[posicao.getLinha()][posicao.getColuna()];
 				botao.setBackground(new Color(235, 217, 0));
 			}
 		} else {
-			List<Posicao> posicoes = this.pecaSelecionada.informarPossiveisJogadas(tabuleiro);
-			Posicao selecionada = new Posicao(linha, coluna);
+			List<Posicao> posicoes = this.jogo.informarPossiveisJogadas(this.selecionada);
+			Posicao nova = new Posicao(linha, coluna);
 
 			// Cancelar seleção
-			if (selecionada.equals(pecaSelecionada.getPosicao())) {
-				pecaSelecionada = null;
+			if (nova.equals(this.selecionada.getPosicao())) {
+				this.selecionada = null;
 				this.atualizarTabuleiro();
 			}
 
-			if (posicoes.contains(selecionada)) {
-				Rei reiEmXeque = this.jogo.moverPeca(pecaSelecionada, selecionada);
+			if (posicoes.contains(nova)) {
+				this.jogo.moverPeca(this.selecionada, nova);
 
-				if (reiEmXeque != null) {
-					this.xeque = reiEmXeque.getPosicao();
-					this.verificarXequeMate();
-				} else {
-					this.xeque = null;
-				}
-
-				this.pecaSelecionada = null;
+				this.selecionada = null;
 				this.atualizarTabuleiro();
 			}
 		}
 	}
 
 	private void atualizarTabuleiro() {
-		Peca[][] campo = jogo.getTabuleiro().getCampo();
-		for(int a = 0; a < 8; a++) {
-			for(int b = 0; b < 8; b++) {
-				Peca peca = campo[a][b];
-				JButton quadrado = quadrados[a][b];
+		Peca[][] campo = this.jogo.getTabuleiro().getCampo();
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++) {
+				Peca peca = campo[i][j];
+				JButton quadrado = this.quadrados[i][j];
 
 				if (peca == null) {
 					quadrado.setIcon(null);
@@ -150,7 +108,7 @@ public class TelaJogo extends JFrame implements ActionListener {
 					quadrado.setIcon(new ImageIcon(img));
 				}
 
-				if((a + b) % 2 == 0) {
+				if((i + j) % 2 == 0) {
 					quadrado.setBackground(Color.WHITE);
 				} else {
 					quadrado.setBackground(Color.BLACK);
@@ -158,51 +116,27 @@ public class TelaJogo extends JFrame implements ActionListener {
 			}
 		}
 
+		Posicao xeque = this.jogo.getXeque();
 		if (xeque != null) {
-			quadrados[xeque.getLinha()][xeque.getColuna()].setBackground(Color.RED);
+			this.quadrados[xeque.getLinha()][xeque.getColuna()].setBackground(Color.RED);
 		}
 		
-		if (jogo.getEstado() == EstadoDeJogo.GAMEOVER) {
+		if (this.jogo.getEstado() == EstadoDeJogo.GAMEOVER) {
 			informarFimDeJogo();
-		}
-	}
-
-	private void verificarXequeMate() {
-		if (this.xeque == null) {
-			return;
-		}
-
-		Tabuleiro tabuleiro = this.jogo.getTabuleiro();
-		Peca peca = tabuleiro.getCampo()[xeque.getLinha()][xeque.getColuna()];
-		List<Posicao> posicoes = peca.informarPossiveisJogadas(tabuleiro);
-
-		// Remover possiveis jogadas que não tiram o xeque do rei
-		for (int i = 0; i < posicoes.size(); i++) {
-			Posicao posicao = posicoes.get(i);
-			boolean movimentoValido = this.jogo.isMovimentoValidoTendoReiEmXeque(peca, posicao);
-			if (!movimentoValido)
-				posicoes.remove(i--);
-		}
-
-		boolean xequeMate = posicoes.size() == 0;
-		if (xequeMate) {
-			this.jogo.setEstado(EstadoDeJogo.GAMEOVER);
-			this.xeque = null;
-			atualizarTabuleiro();
 		}
 	}
 
 	private void informarFimDeJogo() {
 		String vencedor = "Vitória das peças ";
 
-		if(this.jogo.getTabuleiro().isVezDasBrancas()) {
+		if(this.jogo.isVezDasBrancas()) {
 			vencedor += "pretas.";
 		} else {
 			vencedor += "brancas.";
 		}
 
 		String[] opcoes = {"Recomeçar"};
-		int recomecar = JOptionPane.showOptionDialog(null, vencedor, "Fim de jogo",
+		int recomecar = JOptionPane.showOptionDialog(null, vencedor, "Fim de Jogo",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoes, opcoes[0]);
 		if (recomecar == 0) {
 			this.iniciarJogo();
