@@ -2,6 +2,8 @@ package br.ufrn.imd.controle;
 
 import br.ufrn.imd.modelo.*;
 
+import java.util.List;
+
 public class Jogo {
 
 	private Tabuleiro tabuleiro;
@@ -64,16 +66,8 @@ public class Jogo {
 
 		this.tabuleiro.setCampo(lugares);
 	}
-	
-	public void setTabuleiro(Tabuleiro tabuleiro) {
-		this.tabuleiro = tabuleiro;
-	}
-	
-	public Tabuleiro getTabuleiro() {
-		return tabuleiro;
-	}
-	
-	public void moverPeca(Peca peca, Posicao posicao) {
+
+	public Rei moverPeca(Peca peca, Posicao posicao) {
 		Peca[][] campo = tabuleiro.getCampo();
 
 		Integer linha = posicao.getLinha();
@@ -101,6 +95,67 @@ public class Jogo {
 		
 		// TROCA A VEZ
 		tabuleiro.setVezDasBrancas(!tabuleiro.isVezDasBrancas());
+
+		Rei reiEmCheque = getReiEmCheque();
+		return reiEmCheque;
 	}
-	
+
+	private Rei getReiEmCheque() {
+		Peca[][] campo = this.tabuleiro.getCampo();
+
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				Peca peca = campo[i][j];
+				if (peca == null) {
+					continue;
+				}
+
+				List<Posicao> posicoes = peca.informarPossiveisJogadas(this.tabuleiro);
+				for (Posicao posicao : posicoes) {
+					Peca inimigo = campo[posicao.getLinha()][posicao.getColuna()];
+					if (inimigo != null && inimigo instanceof Rei) {
+						return (Rei) inimigo;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public boolean isMovimentoValidoTendoReiEmCheque(Peca peca, Posicao nova) {
+		Peca[][] campo = this.tabuleiro.getCampo();
+		Posicao atual = peca.getPosicao();
+
+		Peca naPosicaoNova = campo[nova.getLinha()][nova.getColuna()];
+		// movimento
+		campo[nova.getLinha()][nova.getColuna()] = peca;
+		campo[atual.getLinha()][atual.getColuna()] = null;
+		this.tabuleiro.setCampo(campo);
+
+		boolean movimentoValido = this.getReiEmCheque() == null;
+
+		// desfazer movimento
+		campo[nova.getLinha()][nova.getColuna()] = naPosicaoNova;
+		campo[atual.getLinha()][atual.getColuna()] = peca;
+		this.tabuleiro.setCampo(campo);
+
+		return movimentoValido;
+	}
+
+	public void setTabuleiro(Tabuleiro tabuleiro) {
+		this.tabuleiro = tabuleiro;
+	}
+
+	public Tabuleiro getTabuleiro() {
+		return tabuleiro;
+	}
+
+	public EstadoDeJogo getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoDeJogo estado) {
+		this.estado = estado;
+	}
 }

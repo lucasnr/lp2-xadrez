@@ -3,7 +3,6 @@ package br.ufrn.imd.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.ufrn.imd.util.PecaUtil.isJogadaDisponivel;
 import static br.ufrn.imd.util.PecaUtil.isPosicaoVazia;
 
 public class Peao extends Peca {
@@ -66,7 +65,7 @@ public class Peao extends Peca {
 			}
         	
         	// COMER NA INFERIOR ESQUERDA
-			if (linha < 8 && coluna > 0) {
+			if (linha < 7 && coluna > 0) {
 				Peca inferiorEsquerda = tab[linha + 1][coluna - 1];
 				if (inferiorEsquerda != null && inferiorEsquerda.getCor() != this.getCor()) {
 					posicoes.add(new Posicao(linha +1, coluna - 1));
@@ -74,7 +73,7 @@ public class Peao extends Peca {
 			}
         	
         	// COMER NA INFERIOR DIREITA
-			if (linha < 8 && coluna < 7) {
+			if (linha < 7 && coluna < 7) {
 				Peca inferiorDireita = tab[linha + 1][coluna + 1];
 				if (inferiorDireita != null && inferiorDireita.getCor() != this.getCor()) {
 					posicoes.add(new Posicao(linha + 1, coluna + 1));
