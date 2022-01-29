@@ -94,11 +94,11 @@ public class Jogo {
 		// TROCA A VEZ
 		tabuleiro.setVezDasBrancas(!tabuleiro.isVezDasBrancas());
 
-		Rei reiEmCheque = getReiEmCheque();
-		return reiEmCheque;
+		Rei reiEmXeque = getReiEmXeque();
+		return reiEmXeque;
 	}
 
-	private Rei getReiEmCheque() {
+	private Rei getReiEmXeque() {
 		Peca[][] campo = this.tabuleiro.getCampo();
 
 		for (int i = 0; i < 8; i++) {
@@ -121,7 +121,7 @@ public class Jogo {
 		return null;
 	}
 
-	public boolean isMovimentoValidoTendoReiEmCheque(Peca peca, Posicao nova) {
+	public boolean isMovimentoValidoTendoReiEmXeque(Peca peca, Posicao nova) {
 		Peca[][] campo = this.tabuleiro.getCampo();
 		Posicao atual = peca.getPosicao();
 
@@ -130,7 +130,7 @@ public class Jogo {
 		campo[nova.getLinha()][nova.getColuna()] = peca;
 		campo[atual.getLinha()][atual.getColuna()] = null;
 
-		boolean movimentoValido = this.getReiEmCheque() == null;
+		boolean movimentoValido = this.getReiEmXeque() == null;
 
 		// desfazer movimento
 		campo[nova.getLinha()][nova.getColuna()] = naPosicaoNova;

@@ -17,7 +17,7 @@ public class TelaJogo extends JFrame implements ActionListener {
 
 	private Jogo jogo;
 	private Peca pecaSelecionada;
-	private Posicao cheque;
+	private Posicao xeque;
 
 	public static void main(String[] args) {
 		TelaJogo tela = new TelaJogo();
@@ -101,15 +101,13 @@ public class TelaJogo extends JFrame implements ActionListener {
 
 			List<Posicao> posicoes = peca.informarPossiveisJogadas(tabuleiro);
 
-			// Remover possiveis jogadas que não tiram o cheque do rei
-			if (this.cheque != null || peca instanceof Rei) {
+			// Remover possiveis jogadas que não tiram o xeque do rei
+			if (this.xeque != null || peca instanceof Rei) {
 				for (int i = 0; i < posicoes.size(); i++) {
 					Posicao posicao = posicoes.get(i);
-					boolean movimentoValido = this.jogo.isMovimentoValidoTendoReiEmCheque(peca, posicao);
-					if (!movimentoValido) {
-						posicoes.remove(i);
-						i--;
-					}
+					boolean movimentoValido = this.jogo.isMovimentoValidoTendoReiEmXeque(peca, posicao);
+					if (!movimentoValido)
+						posicoes.remove(i--);
 				}
 			}
 
@@ -134,12 +132,12 @@ public class TelaJogo extends JFrame implements ActionListener {
 			}
 
 			if (posicoes.contains(selecionada)) {
-				Rei reiEmCheque = this.jogo.moverPeca(pecaSelecionada, selecionada);
+				Rei reiEmXeque = this.jogo.moverPeca(pecaSelecionada, selecionada);
 
-				if (reiEmCheque != null) {
-					this.cheque = reiEmCheque.getPosicao();
+				if (reiEmXeque != null) {
+					this.xeque = reiEmXeque.getPosicao();
 				} else {
-					this.cheque = null;
+					this.xeque = null;
 				}
 
 				this.pecaSelecionada = null;
@@ -170,8 +168,8 @@ public class TelaJogo extends JFrame implements ActionListener {
 			}
 		}
 
-		if (cheque != null) {
-			quadrados[cheque.getLinha()][cheque.getColuna()].setBackground(Color.RED);
+		if (xeque != null) {
+			quadrados[xeque.getLinha()][xeque.getColuna()].setBackground(Color.RED);
 		}
 		
 		if (jogo.getEstado() == EstadoDeJogo.GAMEOVER) {
