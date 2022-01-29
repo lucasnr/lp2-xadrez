@@ -96,10 +96,10 @@ public class Jogo {
 		Rei reiEmXeque = getReiEmXeque();
 		if (reiEmXeque != null) {
 			this.xeque = reiEmXeque.getPosicao();
-			this.verificarXequeMate();
 		} else {
 			this.xeque = null;
 		}
+		this.verificarXequeMate();
 	}
 
 	private Rei getReiEmXeque() {
@@ -124,7 +124,7 @@ public class Jogo {
 		return null;
 	}
 
-	public boolean isMovimentoValidoTendoReiEmXeque(Peca peca, Posicao nova) {
+	public boolean isMovimentoValidoNaoDeixandoReiEmXeque(Peca peca, Posicao nova) {
 		Peca[][] campo = this.tabuleiro.getCampo();
 		Posicao atual = peca.getPosicao();
 
@@ -133,7 +133,8 @@ public class Jogo {
 		campo[nova.getLinha()][nova.getColuna()] = peca;
 		campo[atual.getLinha()][atual.getColuna()] = null;
 
-		boolean movimentoValido = this.getReiEmXeque() == null;
+		Rei reiEmXeque = this.getReiEmXeque();
+		boolean movimentoValido = reiEmXeque == null || reiEmXeque.getCor() != peca.getCor();
 
 		// desfazer movimento
 		campo[nova.getLinha()][nova.getColuna()] = naPosicaoNova;
@@ -153,30 +154,45 @@ public class Jogo {
 		}
 
 		List<Posicao> posicoes = peca.informarPossiveisJogadas(this.tabuleiro);
-		if (this.xeque != null || peca instanceof Rei) {
-			// Remover possiveis jogadas que não tiram o xeque do rei
-			for (int i = 0; i < posicoes.size(); i++) {
-				Posicao posicao = posicoes.get(i);
-				if (!this.isMovimentoValidoTendoReiEmXeque(peca, posicao))
-					posicoes.remove(i--);
-			}
+		// Remover possiveis jogadas que não tiram o xeque do rei
+		for (int i = 0; i < posicoes.size(); i++) {
+			Posicao posicao = posicoes.get(i);
+			if (!this.isMovimentoValidoNaoDeixandoReiEmXeque(peca, posicao))
+				posicoes.remove(i--);
 		}
 
 		return posicoes;
 	}
 
 	private void verificarXequeMate() {
-		if (this.xeque == null) {
+		CorDaPeca corDaVez = this.vezDasBrancas ? CorDaPeca.BRANCA : CorDaPeca.PRETA;
+
+		List<Peca> pecasDaCorDaVez = new ArrayList<>();
+		Peca[][] campo = this.tabuleiro.getCampo();
+		for (Peca[] linha : campo)
+			for (Peca peca : linha)
+				if (peca != null && peca.getCor() == corDaVez)
+					pecasDaCorDaVez.add(peca);
+
+		Rei reiDaVez = null;
+		for (Peca peca : pecasDaCorDaVez)
+			if (peca instanceof Rei)
+				reiDaVez = (Rei) peca;
+
+		List<Posicao> posicoes = reiDaVez.informarPossiveisJogadas(this.tabuleiro);
+		if (posicoes.size() == 0)
 			return;
-		}
 
-		Peca peca = this.tabuleiro.getCampo()[this.xeque.getLinha()][this.xeque.getColuna()];
-		List<Posicao> posicoes = this.informarPossiveisJogadas(peca);
+		for (Posicao posicao : posicoes)
+			// Se o rei tem algum movimento válido, logo não está em xeque-mate
+			if (this.isMovimentoValidoNaoDeixandoReiEmXeque(reiDaVez, posicao))
+				return;
 
-		boolean xequeMate = posicoes.size() == 0;
-		if (xequeMate) {
-			this.estado = EstadoDeJogo.GAMEOVER;
-		}
+		// O rei não está em xeque e existem outras peças
+		if (this.xeque == null && pecasDaCorDaVez.size() > 1)
+			return;
+
+		this.estado = EstadoDeJogo.GAMEOVER;
 	}
 
 	public Tabuleiro getTabuleiro() {
