@@ -36,6 +36,19 @@ public class TelaJogo extends JFrame implements ActionListener {
 	public void iniciarJogo() {
 		this.jogo = new Jogo();
 
+		Peca[][] campo = this.jogo.getTabuleiro().getCampo();
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				Peca peca = campo[i][j];
+				if (peca != null && peca.getCor() == CorDaPeca.PRETA && !(peca instanceof Rei)) {
+					campo[i][j] = null;
+				}
+				if (peca != null && peca instanceof Peao) {
+					campo[i][j] = null;
+				}
+			}
+		}
+
 		Container ctn = getContentPane();
 		ctn.setLayout(new GridLayout(8, 9, 0, 0));
 
@@ -89,7 +102,7 @@ public class TelaJogo extends JFrame implements ActionListener {
 			List<Posicao> posicoes = peca.informarPossiveisJogadas(tabuleiro);
 
 			// Remover possiveis jogadas que não tiram o cheque do rei
-			if (this.cheque != null) {
+			if (this.cheque != null || peca instanceof Rei) {
 				for (int i = 0; i < posicoes.size(); i++) {
 					Posicao posicao = posicoes.get(i);
 					boolean movimentoValido = this.jogo.isMovimentoValidoTendoReiEmCheque(peca, posicao);

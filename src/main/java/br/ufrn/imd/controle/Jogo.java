@@ -74,23 +74,21 @@ public class Jogo {
 		Integer coluna = posicao.getColuna();
 
 		// REI PEGO?
-		if(campo[linha][coluna] instanceof Rei) {
+		if (campo[linha][coluna] instanceof Rei) {
 			estado = EstadoDeJogo.GAMEOVER;
 		}
-		
+
 		// MOVER
 		campo[linha][coluna] = peca;
 		campo[peca.getPosicao().getLinha()][peca.getPosicao().getColuna()] = null;
 		peca.setPosicao(posicao);
-		tabuleiro.setCampo(campo);
-		
+
 		// PROMOCAO DE PEAO?
-		if(campo[linha][coluna] instanceof Peao && (linha == 7 || linha == 0)) {
+		if (campo[linha][coluna] instanceof Peao && (linha == 7 || linha == 0)) {
 			Rainha r = new Rainha();
 			r.setCor(peca.getCor());
 			campo[linha][coluna] = r;
 			r.setPosicao(posicao);
-			tabuleiro.setCampo(campo);
 		}
 		
 		// TROCA A VEZ
@@ -131,14 +129,12 @@ public class Jogo {
 		// movimento
 		campo[nova.getLinha()][nova.getColuna()] = peca;
 		campo[atual.getLinha()][atual.getColuna()] = null;
-		this.tabuleiro.setCampo(campo);
 
 		boolean movimentoValido = this.getReiEmCheque() == null;
 
 		// desfazer movimento
 		campo[nova.getLinha()][nova.getColuna()] = naPosicaoNova;
 		campo[atual.getLinha()][atual.getColuna()] = peca;
-		this.tabuleiro.setCampo(campo);
 
 		return movimentoValido;
 	}
