@@ -5,6 +5,12 @@ import java.util.List;
 
 import static br.ufrn.imd.util.PecaUtil.isJogadaDisponivel;
 
+/** Classe da peça cavalo onde serão mantidos os valores e métodos dela
+ * 
+ * @author Brayan
+ * @version 1.0
+ *
+ */
 public class Cavalo extends Peca {
 
     @Override

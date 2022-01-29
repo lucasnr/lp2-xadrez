@@ -6,8 +6,15 @@ import java.util.List;
 import static br.ufrn.imd.util.PecaUtil.isColisao;
 import static br.ufrn.imd.util.PecaUtil.isJogadaDisponivel;
 
+/** Classe da peça bispo onde serão mantidos os valores e métodos dela
+ * 
+ * @author Lucas
+ * @version 1.0
+ *
+ */
 public class Bispo extends Peca {
 
+	
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {

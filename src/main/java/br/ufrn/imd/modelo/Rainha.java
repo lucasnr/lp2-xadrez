@@ -3,6 +3,12 @@ package br.ufrn.imd.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Classe da peça rainha onde serão mantidos os valores e métodos dela
+ * 
+ * @author Lucas
+ * @version 1.0
+ *
+ */
 public class Rainha extends Peca {
 
     @Override
