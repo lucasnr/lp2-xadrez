@@ -11,6 +11,10 @@ import java.util.List;
  */
 public class Rainha extends Peca {
 
+	/** Método que retorna o caminho da imagem da peça rainha a depender da cor
+     * 
+     * @return String - Caminho da imagem da peça rainha a depender da cor
+     */
     @Override
     public String getImagem() {
         if (this.getCor() == CorDaPeca.BRANCA) {
@@ -20,6 +24,11 @@ public class Rainha extends Peca {
         }
     }
 
+    /** Método que verifica a situação da rainha no tabuleiro e retorna um List com posições de jogadas possiveis
+     * 
+     * @param tabuleiro Tabuleiro - Objeto do tipo tabuleiro que contém a rainha para ser analisado a jogada
+     * @return List<Posicao> - List com as posições disponiveis para movimentação
+     */
     @Override
     public List<Posicao> informarPossiveisJogadas(Tabuleiro tabuleiro) {
         List<Posicao> posicoes = new ArrayList<>();
