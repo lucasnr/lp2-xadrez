@@ -5,6 +5,14 @@ import br.ufrn.imd.modelo.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Classe responsável por controlar o tabuleiro e estado do jogo a depender da situação do tabuleiro e
+ * do comandos dados pelo objeto da classe TelaJogo
+ * 
+ * @author Brayan
+ * @author Lucas
+ * @version 1.0
+ * 
+ */
 public class Jogo {
 
 	private EstadoDeJogo estado;
@@ -12,6 +20,11 @@ public class Jogo {
 	private boolean vezDasBrancas;
 	private Posicao xeque;
 
+	/** Construtor responsável por criar um objeto inicializando um tabuleiro, distribuindo as peças
+	 * pelo tabuleiro em suas devidas posições iniciais, atribuindo o estado do jogo START e o boolean
+	 * vezDasBrancas para true de acordo com as regras
+	 * 
+	 */
 	public Jogo() {
 		this.estado = EstadoDeJogo.START;
 		this.tabuleiro = new Tabuleiro();
@@ -21,7 +34,7 @@ public class Jogo {
 
 		CorDaPeca cores[] = { CorDaPeca.BRANCA, CorDaPeca.PRETA };
 		for (CorDaPeca cor : cores) {
-			// PeÃµes
+			// Peões
 			for (int i = 0; i < 8; i++) {
 				Integer linha = cor == CorDaPeca.BRANCA ? 6 : 1;
 				Peca peao = new Peao();
@@ -71,6 +84,13 @@ public class Jogo {
 		this.tabuleiro.setCampo(lugares);
 	}
 
+	/** Método responsável por mudar a peça de lugar e reagir com o tabuleiro de forma necessária a
+	 * depender da situação, promovendo peões a rainhas caso cheguem ao outro lado, verificando
+	 * possíveis xeques através do método verificarXequeMate e mudando a vez da jogada ao mover a peça
+	 * 
+	 * @param peca Peca - Objeto do tipo Peca que deve ser movido
+	 * @param posicao Posicao - Objeto do tipo posição que representa linha e coluna aonde deve ser movido
+	 */
 	public void moverPeca(Peca peca, Posicao posicao) {
 		Peca[][] campo = this.tabuleiro.getCampo();
 
@@ -102,6 +122,11 @@ public class Jogo {
 		this.verificarXequeMate();
 	}
 
+	/** Método que verifica o tabuleiro para saber se há um xeque e retorna o Rei em xeque ou null caso 
+	 * não haja um xeque naquele momento
+	 * 
+	 * @return Rei - Objeto do tipo Rei no tabuleiro que está em xeque, null caso não exista xeque
+	 */
 	private Rei getReiEmXeque() {
 		Peca[][] campo = this.tabuleiro.getCampo();
 
@@ -124,6 +149,13 @@ public class Jogo {
 		return null;
 	}
 
+	/** Método que recebe peça e posição e verifica se aquele movimento deixará o rei em xeque retornando true
+	 * ou não retornando false
+	 * 
+	 * @param peca Peca - Objeto do tipo Peca que deve ser movido
+	 * @param nova Posicao - Objeto do tipo posição que representa linha e coluna aonde deve ser movido
+	 * @return boolean - Retorna true caso o movimento informado deixe o rei em xeque e false caso contrário
+	 */
 	public boolean isMovimentoValidoNaoDeixandoReiEmXeque(Peca peca, Posicao nova) {
 		Peca[][] campo = this.tabuleiro.getCampo();
 		Posicao atual = peca.getPosicao();
@@ -143,6 +175,13 @@ public class Jogo {
 		return movimentoValido;
 	}
 
+	/** Método que recebe uma peça e informa as possíveis jogadas em uma List, jogadas essas que não deixaram
+	 * o rei em xeque pelo uso do método isMovimentoValidoNaoDeixandoReiEmXeque
+	 * 
+	 * @param peca Peca - Objeto do tipo Peca que deve ser verificado as possibilidades de movimento
+	 * @return List - Objeto do tipo List indicando as possibilidades de movimento daquela peça a depender dos
+	 * movimentos dela e se aquilo trará perigo ao seu rei, deixando-o em xeque
+	 */
 	public List<Posicao> informarPossiveisJogadas(Peca peca) {
 		if (peca == null) {
 			return new ArrayList<>();
@@ -164,6 +203,11 @@ public class Jogo {
 		return posicoes;
 	}
 
+	/** Método que verifica se existe um xeque-mate no tabuleiro a depender da situação e da vez
+	 * da cor de peça atual atribuindo o estado de GAMEOVER caso não haja nada a fazer que evite um
+	 * xeque-mate
+	 * 
+	 */
 	private void verificarXequeMate() {
 		CorDaPeca corDaVez = this.vezDasBrancas ? CorDaPeca.BRANCA : CorDaPeca.PRETA;
 
@@ -195,18 +239,34 @@ public class Jogo {
 		this.estado = EstadoDeJogo.GAMEOVER;
 	}
 
+	/** Método que retorna o objeto do tipo Tabuleiro do atributo tabuleiro
+	 * 
+	 * @return Tabuleiro - Um objeto do tipo tabuleiro
+	 */
 	public Tabuleiro getTabuleiro() {
 		return tabuleiro;
 	}
 
+	/** Método que retorna o valor do atributo estado
+	 * 
+	 * @return EstadoDeJogo - Um enum do tipo EstadoDeJogo
+	 */
 	public EstadoDeJogo getEstado() {
 		return estado;
 	}
 
+	/** Método que retorna o valor do atributo xeque
+	 * 
+	 * @return boolean - Um boolean que indica se há xeques no jogo, false caso contrário
+	 */
 	public Posicao getXeque() {
 		return this.xeque;
 	}
 
+	/** Método que retorna o valor do atributo vezDasBrancas
+	 * 
+	 * @return boolean - Um boolean que indica se é a vez das peças de cor branca, false caso contrário
+	 */
 	public boolean isVezDasBrancas() {
 		return this.vezDasBrancas;
 	}
